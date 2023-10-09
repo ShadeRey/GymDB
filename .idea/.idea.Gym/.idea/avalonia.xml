@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Gym/App.axaml" value="Gym/Gym.csproj" />
+        <entry key="Gym/Instructor.axaml" value="Gym/Gym.csproj" />
+        <entry key="Gym/InstructorWindow.axaml" value="Gym/Gym.csproj" />
+        <entry key="Gym/MainWindow.axaml" value="Gym/Gym.csproj" />
+        <entry key="Gym/Working_week_days_window.axaml" value="Gym/Gym.csproj" />
+        <entry key="Gym/ghoul.axaml" value="Gym/Gym.csproj" />
+        <entry key="Gym/sss.axaml" value="Gym/Gym.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

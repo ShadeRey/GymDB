@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Gym.InstructorWindow"
+        Title="Instructor">
+        <Grid>
+                <DataGrid Name="InstructorGrid" x:CompileBindings="False">
+                        <DataGrid.Columns>
+                                <DataGridTextColumn Header="Instructor_id" Binding="{Binding Instructor_id}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Surname" Binding="{Binding Surname}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Patronymic" Binding="{Binding Patronymic}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                </DataGrid>
+                <WrapPanel VerticalAlignment="Bottom">
+                        <Button Name="previousWindow" Content="Back" Click="PreviousWindow_OnClick"></Button>
+                        <Button Name="nextWindow" Content="Next" Click="NextWindow_OnClick"></Button>
+                </WrapPanel>
+        </Grid>
+</Window>
+
