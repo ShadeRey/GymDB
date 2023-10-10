@@ -7,36 +7,30 @@ using MySql.Data.MySqlClient;
 
 namespace Gym;
 
-public partial class MainWindow : Window
-{
+public partial class MainWindow : Window {
     private string _connString = "server=10.10.1.24;database=pro1_23;User Id=user_01;password=user01pro";
     private List<Client> _clients;
     private MySqlConnection _connection;
 
-    public MainWindow()
-    {
+    public MainWindow() {
         InitializeComponent();
         string fullTable = "select * from Client";
         ShowTable(fullTable);
-        
     }
 
-    public void ShowTable(string sql)
-    {
+    public void ShowTable(string sql) {
         _clients = new List<Client>();
         _connection = new MySqlConnection(_connString);
         _connection.Open();
         MySqlCommand command = new MySqlCommand(sql, _connection);
         MySqlDataReader reader = command.ExecuteReader();
-        while (reader.Read() && reader.HasRows)
-        {
-            var currentClient = new Client()
-            {
+        while (reader.Read() && reader.HasRows) {
+            var currentClient = new Client() {
                 Client_id = reader.GetInt32("Client_id"),
                 Name = reader.GetString("Name"),
                 Surname = reader.GetString("Surname"),
                 Patronymic = reader.GetString("Patronymic"),
-                Phone_number = reader.GetInt32("Phone_number")
+                Phone_number = reader.GetInt64("Phone_number")
             };
             _clients.Add(currentClient);
         }
@@ -46,25 +40,23 @@ public partial class MainWindow : Window
     }
 
     private List<Client> _clientsPreSearch;
-    private void TxtSearch_OnTextChanged(object? sender, TextChangedEventArgs e)
-    {
+
+    private void TxtSearch_OnTextChanged(object? sender, TextChangedEventArgs e) {
         // // string searchSql = $"select * from Client where Client.Name = '{txtSearch.Text}%';";
         // // ShowTable();
-        if (_clientsPreSearch is null)
-        {
+        if (_clientsPreSearch is null) {
             _clientsPreSearch = _clients;
         }
-        
-        if (txtSearch.Text is null)
-        {
+
+        if (txtSearch.Text is null) {
             return;
         }
-        
-        if (string.IsNullOrWhiteSpace(txtSearch.Text))
-        {
+
+        if (string.IsNullOrWhiteSpace(txtSearch.Text)) {
             ClientGrid.ItemsSource = _clientsPreSearch;
             return;
         }
+
         //
         // ClientGrid.ItemsSource = _clientsPreSearch.Where(
         //     it => it.Name.ToLower().Contains(txtSearch.Text.ToLower())
@@ -110,16 +102,41 @@ public partial class MainWindow : Window
             ClientGrid.ItemsSource = filteredddd;
         }
         else if (txtFilter.SelectedIndex == 5) {
-            var filtereddddd = _clientsPreSearch.Where(it => it.Phone_number.ToString().Contains(txtSearch.Text)).ToList();
+            var filtereddddd = _clientsPreSearch.Where(it => it.Phone_number.ToString().Contains(txtSearch.Text))
+                .ToList();
             filtereddddd = filtereddddd.OrderBy(phonenumb => phonenumb.Phone_number).ToList();
             ClientGrid.ItemsSource = filtereddddd;
         }
     }
 
-    private void Button_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var myValue = ((Button)sender).Tag as Client;
-        sss s = new sss(myValue);
+    private void Button_OnClick(object? sender, RoutedEventArgs e) {
+        Client myValue = ((Button)sender!).Tag as Client;
+        sss s = new sss(myValue!, (dialog, client) => {
+            MySqlConnection conn;
+            const string sql = """
+                               UPDATE Client
+                               SET Name = @namebox,
+                                   Surname = @surnamebox,
+                                   Patronymic = @patronymicbox,
+                                   Phone_number = @phonebox
+                               WHERE Client_id = @id;
+                               """;
+            conn = new MySqlConnection(_connString);
+            conn.Open();
+            MySqlCommand command = new MySqlCommand(sql, conn);
+            command.Parameters.Add("@id", MySqlDbType.Int32);
+            command.Parameters["@id"].Value = client.Client_id;
+            command.Parameters.Add("@namebox", MySqlDbType.VarChar);
+            command.Parameters["@namebox"].Value = client.Name;
+            command.Parameters.Add("@surnamebox", MySqlDbType.VarChar);
+            command.Parameters["@surnamebox"].Value = client.Surname;
+            command.Parameters.Add("@patronymicbox", MySqlDbType.VarChar);
+            command.Parameters["@patronymicbox"].Value = client.Patronymic;
+            command.Parameters.Add("@phonebox", MySqlDbType.Int64);
+            command.Parameters["@phonebox"].Value = client.Phone_number;
+            command.ExecuteNonQuery();
+            conn.Close();
+        });
         s.ShowDialog(this);
         s.Closed += (o, args) => {
             if (s.Result) {
@@ -128,8 +145,7 @@ public partial class MainWindow : Window
         };
     }
 
-    private void ButtonDelete_OnClick(object? sender, RoutedEventArgs e)
-    {
+    private void ButtonDelete_OnClick(object? sender, RoutedEventArgs e) {
         var myValuee = ((Button)sender).Tag as Client;
         ghoul g = new ghoul(myValuee);
         g.ShowDialog(this);
@@ -140,10 +156,47 @@ public partial class MainWindow : Window
         };
     }
 
-    private void NextWindow_OnClick(object? sender, RoutedEventArgs e)
-    {
+    private void NextWindow_OnClick(object? sender, RoutedEventArgs e) {
         InstructorWindow instructor = new InstructorWindow();
         instructor.Show();
         Close();
+    }
+
+    private void Btn_add_OnClick(object? sender, RoutedEventArgs e) {
+        Client myValue = new Client();
+        sss s = new sss(myValue!, (dialog, client) => {
+            MySqlConnection conn;
+            const string sql = """
+                               INSERT INTO Client(Name,
+                                                  Surname,
+                                                  Patronymic,
+                                                  Phone_number) 
+                               VALUES (@namebox,
+                                       @surnamebox,
+                                       @patronymicbox,
+                                       @phonebox)
+                               """;
+            conn = new MySqlConnection(_connString);
+            conn.Open();
+            MySqlCommand command = new MySqlCommand(sql, conn);
+            command.Parameters.Add("@id", MySqlDbType.Int32);
+            command.Parameters["@id"].Value = client.Client_id;
+            command.Parameters.Add("@namebox", MySqlDbType.VarChar);
+            command.Parameters["@namebox"].Value = client.Name;
+            command.Parameters.Add("@surnamebox", MySqlDbType.VarChar);
+            command.Parameters["@surnamebox"].Value = client.Surname;
+            command.Parameters.Add("@patronymicbox", MySqlDbType.VarChar);
+            command.Parameters["@patronymicbox"].Value = client.Patronymic;
+            command.Parameters.Add("@phonebox", MySqlDbType.Int64);
+            command.Parameters["@phonebox"].Value = client.Phone_number;
+            command.ExecuteNonQuery();
+            conn.Close();
+        });
+        s.ShowDialog(this);
+        s.Closed += (o, args) => {
+            if (s.Result) {
+                ShowTable("select * from Client");
+            }
+        };
     }
 }

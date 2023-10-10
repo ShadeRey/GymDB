@@ -53,6 +53,7 @@
                                 <ComboBoxItem>Отчество</ComboBoxItem>
                                 <ComboBoxItem>Номер телефона</ComboBoxItem>
                         </ComboBox>
+                        <Button Name="btn_add" Content="Добавить" Click="Btn_add_OnClick"/>
                 </StackPanel>
                 <DataGrid x:Name="ClientGrid" x:CompileBindings="False" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All">
                         <DataGrid.Columns>
@@ -60,7 +61,7 @@
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Surname" Binding="{Binding Surname}"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Patronymic" Binding="{Binding Patronymic}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Phone_number" Binding="{Binding Phone_number}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Phone_number" Binding="{Binding Phone_number, StringFormat={}+{0:## ### ### ####}}"></DataGridTextColumn>
                                 <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>

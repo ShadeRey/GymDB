@@ -10,7 +10,7 @@ public class Client
     public string Name { get; set; }
     public string Surname { get; set; }
     public string Patronymic { get; set; }
-    public int Phone_number { get; set; }
+    public long? Phone_number { get; set; }
 
 
 }
